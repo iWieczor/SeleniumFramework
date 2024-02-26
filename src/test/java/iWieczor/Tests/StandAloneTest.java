@@ -1,4 +1,4 @@
-package iWieczor.SeleniumFramework;
+package iWieczor.Tests;
 
 import java.time.Duration;
 import java.util.ArrayList;

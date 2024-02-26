@@ -10,6 +10,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+
 import iWieczor.AbstractComponents.AbstractComponent;
 
 public class CartPage extends AbstractComponent {
@@ -25,11 +26,13 @@ public class CartPage extends AbstractComponent {
 	@FindBy(xpath = "//button[normalize-space()='Checkout']")
 	WebElement goToCheckout;
 
-	public void goToCheckout() {
+	public CheckoutPage goToCheckout() {
 		goToCheckout.click();
+		CheckoutPage checkoutPage = new CheckoutPage(driver);
+		return checkoutPage;
 	}
 
-	public void checkCart(WebDriver driver, List<String> shoppingList) {
+	public Boolean checkCart(WebDriver driver, List<String> shoppingList) {
 		goToCart(driver);
 
 		By cartItemLocator = By.cssSelector(".cartSection h3");
@@ -46,8 +49,9 @@ public class CartPage extends AbstractComponent {
 			}
 		}
 
-		if (!foundProducts.equals(new HashSet<>(shoppingList))) {
-			System.out.println("Cart doesnt match the shopping list");
+		Boolean matchText = foundProducts.equals(new HashSet<>(shoppingList));
+		return matchText;
+		
 		}
 	}
-}
+
