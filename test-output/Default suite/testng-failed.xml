@@ -3,13 +3,13 @@
 <suite name="Failed suite [Default suite]" guice-stage="DEVELOPMENT">
   <test thread-count="5" name="Default test(failed)">
     <classes>
-      <class name="iWieczor.Tests.ErrorLoginValidation">
+      <class name="iWieczor.Tests.SubmitOrderTest">
         <methods>
-          <include name="errorProduct"/>
+          <include name="submitOrder" invocation-numbers="0 1"/>
           <include name="tearDown"/>
           <include name="launchApplication"/>
         </methods>
-      </class> <!-- iWieczor.Tests.ErrorLoginValidation -->
+      </class> <!-- iWieczor.Tests.SubmitOrderTest -->
     </classes>
   </test> <!-- Default test(failed) -->
 </suite> <!-- Failed suite [Default suite] -->

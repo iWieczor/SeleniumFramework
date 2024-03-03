@@ -1,0 +1,12 @@
+[
+{
+	"email" : "iwieczorek@iwie.com1",
+	"password" : "Testtest1!",
+	"products" : ["IPHONE 13 PRO"]
+},
+{
+	"email" : "iwiecz2@ggg.com",
+	"password" : "Testtest1",
+	"products" : ["ADIDAS ORIGINAL", "IPHONE 13 PRO"]
+}
+]

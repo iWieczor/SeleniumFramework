@@ -15,7 +15,7 @@ import iWieczor.pageobjects.ProductCatalogue;
 
 public class ErrorLoginValidationTest extends BaseTest{
 
-	@Test
+	@Test(groups = {"ErrorHandling"})
 	public void errorLogin() throws IOException {
 
 	

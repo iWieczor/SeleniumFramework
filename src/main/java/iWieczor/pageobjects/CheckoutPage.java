@@ -32,12 +32,12 @@ public class CheckoutPage extends AbstractComponent {
 	WebElement placeOrder;
 
 	
-	public void fillCheckoutInfo(String CVV, String name, String country) {
+	public void fillCheckoutInfo(String CVV, String name, CharSequence charSequence) {
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
 		CVVEle.sendKeys(CVV);
 		nameEle.sendKeys(name);
 		
-		driver.findElement(By.xpath("(//input[@placeholder='Select Country'])")).sendKeys(country);
+		driver.findElement(By.xpath("(//input[@placeholder='Select Country'])")).sendKeys(charSequence);
 		try {
 			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='payment__shipping']//button")));
 			List<WebElement> options = driver.findElements(By.xpath("//div[@class='payment__shipping']//button"));

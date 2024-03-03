@@ -27,11 +27,11 @@ public class LandingPage extends AbstractComponent {
 	WebElement loginErrorMessage;
 
 	public ProductCatalogue loginApplication(String email, String password) {
-		emailEle.sendKeys(email);
-		passwordEle.sendKeys(password);
-		submit.click();
-		ProductCatalogue productCatalogue = new ProductCatalogue(driver);
-		return productCatalogue;
+	    emailEle.sendKeys(email);
+	    passwordEle.sendKeys(password);
+	    submit.click();
+	    ProductCatalogue productCatalogue = new ProductCatalogue(driver);
+	    return productCatalogue;
 	}
 	
 	public String getLoginErrorMessage() {
