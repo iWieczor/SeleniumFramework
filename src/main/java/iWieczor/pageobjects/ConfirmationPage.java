@@ -7,18 +7,21 @@ import iWieczor.AbstractComponents.AbstractComponent;
 
 public class ConfirmationPage extends AbstractComponent {
 
-	WebDriver driver;
+    WebDriver driver;
 
-	public ConfirmationPage(WebDriver driver) {
-		super(driver);
-		this.driver = driver;
-	}
+    // Constructor to initialize the WebDriver
+    public ConfirmationPage(WebDriver driver) {
+        super(driver);
+        this.driver = driver;
+    }
 
-	public Boolean confirmation(WebDriver driver) {
-		String confirmMessage = driver.findElement(By.cssSelector(".hero-primary")).getText();
-		Boolean match = confirmMessage.equalsIgnoreCase("THANKYOU FOR THE ORDER.");
-		return match;
-//		System.out.println(confirmMessage);
-//		Assert.assertTrue(confirmMessage.equalsIgnoreCase("THANKYOU FOR THE ORDER."));
-	}
+    // Method to check if the confirmation message matches the expected message
+    public Boolean confirmation(WebDriver driver) {
+        // Get the text of the confirmation message
+        String confirmMessage = driver.findElement(By.cssSelector(".hero-primary")).getText();
+
+        // Check if the confirmation message matches the expected message
+        Boolean match = confirmMessage.equalsIgnoreCase("THANKYOU FOR THE ORDER.");
+        return match;
+    }
 }

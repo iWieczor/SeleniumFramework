@@ -6,39 +6,52 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import iWieczor.TestComponents.BaseTest;
+import iWieczor.TestComponents.Retry;
 import iWieczor.pageobjects.ProductCatalogue;
 
 public class LoginTest extends BaseTest {
-	String login = "iwieczorek@iwie.com";
-	String password = "Testtest1!";
+    String login = "iwieczorek@iwie.com";
+    String password = "Testtest1!";
 
-	@Test
-	public void validLogin() {
-		ProductCatalogue productCatalogue = landingPage.loginApplication(login, password);
-		Assert.assertEquals(landingPage.getToastMessage(), "Login Successfully");
-		landingPage.toastDisappear();
-		productCatalogue.signOut(driver);
-		Assert.assertEquals(landingPage.getToastMessage(), "Logout Successfully");
-	}
+    @Test(groups = { "Login" }, retryAnalyzer = Retry.class)
+    public void validLogin() {
+        // Perform a valid login
+        ProductCatalogue productCatalogue = landingPage.loginApplication(login, password);
 
-	@Test
-	public void invalidCredentials() {
+        // Assert that the login was successful by checking the toast message
+        Assert.assertEquals(landingPage.getToastMessage(), "Login Successfully");
 
-		List<String> errorMessages = landingPage.invalidEmailText();
+        // Dismiss the toast message
+        landingPage.toastDisappear();
 
-		String expectedEmptyEmailError = "*Email is required";
-		String expectedEmptyPasswordError = "*Password is required";
-		String expectedInvalidEmailError = "*Enter Valid Email";
+        // Sign out and assert the sign-out toast message
+        productCatalogue.signOut(driver);
+        Assert.assertEquals(landingPage.getToastMessage(), "Logout Successfully");
 
-		Assert.assertEquals(errorMessages.get(0), expectedEmptyEmailError);
-		Assert.assertEquals(errorMessages.get(1), expectedEmptyPasswordError);
-		Assert.assertEquals(errorMessages.get(2), expectedInvalidEmailError);
-	}
+        // Dismiss the toast message
+        landingPage.toastDisappear();
+    }
 
-	@Test
-	public void invalidLogin() {
-		landingPage.loginApplication(login, "invalid password");
-		Assert.assertEquals(landingPage.getToastMessage(), "Incorrect email or password.");
-	}
+    @Test(groups = { "Login" }, retryAnalyzer = Retry.class)
+    public void invalidCredentials() {
+        // Perform a login with empty and invalid credentials
+        List<String> errorMessages = landingPage.invalidEmailText();
 
+        // Expected error messages for empty and invalid credentials
+        String expectedEmptyEmailError = "*Email is required";
+        String expectedEmptyPasswordError = "*Password is required";
+        String expectedInvalidEmailError = "*Enter Valid Email";
+
+        // Assert that the error messages match the expected ones
+        Assert.assertEquals(errorMessages.get(0), expectedEmptyEmailError);
+        Assert.assertEquals(errorMessages.get(1), expectedEmptyPasswordError);
+        Assert.assertEquals(errorMessages.get(2), expectedInvalidEmailError);
+    }
+
+    @Test(groups = { "Login" }, retryAnalyzer = Retry.class)
+    public void invalidLogin() {
+        // Perform an invalid login and assert the error message
+        landingPage.loginApplication(login, "invalid password");
+        Assert.assertEquals(landingPage.getToastMessage(), "Incorrect email or password.");
+    }
 }

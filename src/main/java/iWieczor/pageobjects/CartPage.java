@@ -10,48 +10,56 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-
 import iWieczor.AbstractComponents.AbstractComponent;
 
 public class CartPage extends AbstractComponent {
 
-	WebDriver driver;
+    WebDriver driver;
 
-	public CartPage(WebDriver driver) {
-		super(driver);
-		this.driver = driver;
-		PageFactory.initElements(driver, this);
-	}
+    // Constructor to initialize the WebDriver and set up PageFactory
+    public CartPage(WebDriver driver) {
+        super(driver);
+        this.driver = driver;
+        PageFactory.initElements(driver, this);
+    }
 
-	@FindBy(xpath = "//button[normalize-space()='Checkout']")
-	WebElement goToCheckout;
+    // WebElement representing the "Checkout" button
+    @FindBy(xpath = "//button[normalize-space()='Checkout']")
+    WebElement goToCheckout;
 
-	public CheckoutPage goToCheckout() {
-		goToCheckout.click();
-		CheckoutPage checkoutPage = new CheckoutPage(driver);
-		return checkoutPage;
-	}
+    // Method to navigate to the checkout page and return a CheckoutPage object
+    public CheckoutPage goToCheckout() {
+        goToCheckout.click();
+        CheckoutPage checkoutPage = new CheckoutPage(driver);
+        return checkoutPage;
+    }
 
-	public Boolean checkCart(WebDriver driver, List<String> shoppingList) {
-		goToCart(driver);
+    // Method to check if the items in the shopping list are present in the cart
+    public Boolean checkCart(WebDriver driver, List<String> shoppingList) {
+        // Call the goToCart method from the AbstractComponent class
+        goToCart(driver);
 
-		By cartItemLocator = By.cssSelector(".cartSection h3");
-		List<WebElement> cartItems = driver.findElements(cartItemLocator);
+        // Locator for cart items
+        By cartItemLocator = By.cssSelector(".cartSection h3");
+        List<WebElement> cartItems = driver.findElements(cartItemLocator);
 
-		Set<String> foundProducts = new HashSet<>();
-		for (String product : shoppingList) {
-			for (WebElement cartItem : cartItems) {
-				String cartItemText = cartItem.getText();
-				if (cartItemText.contains(product)) {
-					foundProducts.add(product);
-					break;
-				}
-			}
-		}
+        // Set to store found products
+        Set<String> foundProducts = new HashSet<>();
 
-		Boolean matchText = foundProducts.equals(new HashSet<>(shoppingList));
-		return matchText;
-		
-		}
-	}
+        // Loop through the shopping list and cart items to find matches
+        for (String product : shoppingList) {
+            for (WebElement cartItem : cartItems) {
+                String cartItemText = cartItem.getText();
+                // If the cart item contains the product, add it to the set and break the loop
+                if (cartItemText.contains(product)) {
+                    foundProducts.add(product);
+                    break;
+                }
+            }
+        }
 
+        // Check if all items in the shopping list are found in the cart
+        Boolean matchText = foundProducts.equals(new HashSet<>(shoppingList));
+        return matchText;
+    }
+}

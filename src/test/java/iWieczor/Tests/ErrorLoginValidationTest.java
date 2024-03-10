@@ -11,19 +11,24 @@ import iWieczor.TestComponents.BaseTest;
 import iWieczor.pageobjects.CartPage;
 import iWieczor.pageobjects.ProductCatalogue;
 
-public class ErrorLoginValidationTest extends BaseTest{
-	
-	@Test
-	public void errorProduct() throws IOException {
+public class ErrorLoginValidationTest extends BaseTest {
 
-		List<String> shoppingList = Arrays.asList("IPHONE 133 PRO");
-		
-		ProductCatalogue productCatalogue = landingPage.loginApplication("iwieczorek2@iwie.com", "Testtest1!");
-		productCatalogue.addProductToCart(shoppingList);
-		CartPage cartPage = new CartPage(driver);
-		Boolean match = cartPage.checkCart(driver, shoppingList);
-		Assert.assertFalse(match);
+    @Test
+    public void errorProduct() throws IOException {
+        // List of products to be added to the cart
+        List<String> shoppingList = Arrays.asList("IPHONE 133 PRO");
 
+        // Login to the application and add products to the cart
+        ProductCatalogue productCatalogue = landingPage.loginApplication("iwieczorek2@iwie.com", "Testtest1!");
+        productCatalogue.addProductToCart(shoppingList);
 
-	}
+        // Navigate to the cart page
+        CartPage cartPage = new CartPage(driver);
+
+        // Check if the added product is not present in the cart
+        Boolean match = cartPage.checkCart(driver, shoppingList);
+
+        // Assert that the product is not present in the cart
+        Assert.assertFalse(match);
+    }
 }

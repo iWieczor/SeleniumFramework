@@ -1,5 +1,4 @@
 package iWieczor.Tests;
-
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,29 +17,76 @@ import org.testng.Assert;
 
 public class StandAloneTest {
 
-	public static void main(String[] args) {
-		WebDriver driver = new ChromeDriver();
-		driver.manage().window().maximize();
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3)); // set implicit wait
-		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(2)); // set wait time to 5s
-		driver.get("https://rahulshettyacademy.com/client"); // Loading the homepage
+    public static void main(String[] args) {
+        // Initialize WebDriver
+        WebDriver driver = new ChromeDriver();
+        driver.manage().window().maximize();
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
 
+        // Initialize WebDriverWait
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(2));
 
-		
-		List<String> shoppingList = Arrays.asList("ZARA COAT 3", "IPHONE 13 PRO");
+        // Navigate to the homepage
+        driver.get("https://rahulshettyacademy.com/client");
 
-		login(driver, wait);
-		addToCart(driver, wait, shoppingList);
-		checkCart(driver, shoppingList);
-		checkout(driver, wait);
-		confirmation(driver);
-		driver.quit();
-	}
+        // List of products to be added to the cart
+        List<String> shoppingList = Arrays.asList("ZARA COAT 3", "IPHONE 13 PRO");
 
-	private static void checkCart(WebDriver driver, List<String> shoppingList) {
-		driver.findElement(By.xpath("//button[@routerlink='/dashboard/cart']")).click();
+        // Perform login
+        login(driver, wait);
 
-		By cartItemLocator = By.cssSelector(".cartSection h3");
+        // Add products to the cart
+        addToCart(driver, wait, shoppingList);
+
+        // Check the contents of the cart
+        checkCart(driver, shoppingList);
+
+        // Proceed to checkout
+        checkout(driver, wait);
+
+        // Confirm the order
+        confirmation(driver);
+
+        // Quit the WebDriver
+        driver.quit();
+    }
+
+    // Perform login
+    private static void login(WebDriver driver, WebDriverWait wait) {
+        String email = "iwieczorek@iwie.com";
+        String password = "Testtest1!";
+        driver.findElement(By.id("userEmail")).sendKeys(email);
+        driver.findElement(By.id("userPassword")).sendKeys(password);
+        driver.findElement(By.id("login")).click();
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector("#toast-container")));
+    }
+
+    // Add products to the cart
+    private static void addToCart(WebDriver driver, WebDriverWait wait, List<String> shoppingList) {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".mb-3")));
+        List<WebElement> products = new ArrayList<>(driver.findElements(By.cssSelector(".mb-3")));
+
+        for (String item : shoppingList) {
+            WebElement product = products.stream()
+                    .filter(s -> s.findElement(By.cssSelector("b")).getText().equals(item)).findFirst().orElse(null);
+
+            if (product != null) {
+                WebElement button = product.findElement(By.xpath("(.//button[@class='btn w-10 rounded'])"));
+                button.click();
+
+                wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#toast-container")));
+                wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector("#toast-container")));
+            } else {
+                System.out.println("Item not found: " + item);
+            }
+        }
+    }
+
+    // Check the contents of the cart
+    private static void checkCart(WebDriver driver, List<String> shoppingList) {
+        driver.findElement(By.xpath("//button[@routerlink='/dashboard/cart']")).click();
+
+        By cartItemLocator = By.cssSelector(".cartSection h3");
         List<WebElement> cartItems = driver.findElements(cartItemLocator);
 
         // Set to track found products
@@ -62,69 +108,34 @@ public class StandAloneTest {
         if (!foundProducts.equals(new HashSet<>(shoppingList))) {
             System.out.println("There are extra items in the cart");
         }
-	}
+    }
 
-	private static void confirmation(WebDriver driver) {
-		driver.findElement(By.xpath("//a[normalize-space()='Place Order']")).click();
-		String confirmMessage = driver.findElement(By.cssSelector(".hero-primary")).getText();
-//		System.out.println(confirmMessage);
-		Assert.assertTrue(confirmMessage.equalsIgnoreCase("THANKYOU FOR THE ORDER."));
-		
-	}
+    // Proceed to checkout
+    private static void checkout(WebDriver driver, WebDriverWait wait) {
+        driver.findElement(By.xpath("//button[normalize-space()='Checkout']")).click();
+        driver.findElement(By.xpath("(//input[@type='text'])[1]")).sendKeys("1234567890");
+        driver.findElement(By.xpath("(//input[@type='text'])[2]")).sendKeys("222");
+        driver.findElement(By.xpath("(//input[@type='text'])[3]")).sendKeys("Wieczorek");
 
-	private static void checkout(WebDriver driver, WebDriverWait wait) {
-		driver.findElement(By.xpath("//button[normalize-space()='Checkout']")).click();
-		driver.findElement(By.xpath("(//input[@type='text'])[1]")).sendKeys("1234567890");
-		driver.findElement(By.xpath("(//input[@type='text'])[2]")).sendKeys("222");
-		driver.findElement(By.xpath("(//input[@type='text'])[3]")).sendKeys("Wieczorek");
-		
-		driver.findElement(By.xpath("(//input[@placeholder='Select Country'])")).sendKeys("Poland");
-		try {
-			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='payment__shipping']//button")));
-			List<WebElement> options = driver.findElements(By.xpath("//div[@class='payment__shipping']//button"));
-			for (WebElement option : options) {
-				if (option.getText().equalsIgnoreCase("Poland")) {
-					option.click();
-					break;
-				}
-			}
-		} catch (TimeoutException e) {
-			System.out.println("ERROR - Invalid country");
-		}
-		
-		
-		
-	}
+        driver.findElement(By.xpath("(//input[@placeholder='Select Country'])")).sendKeys("Poland");
+        try {
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='payment__shipping']//button")));
+            List<WebElement> options = driver.findElements(By.xpath("//div[@class='payment__shipping']//button"));
+            for (WebElement option : options) {
+                if (option.getText().equalsIgnoreCase("Poland")) {
+                    option.click();
+                    break;
+                }
+            }
+        } catch (TimeoutException e) {
+            System.out.println("ERROR - Invalid country");
+        }
+    }
 
-	private static void addToCart(WebDriver driver, WebDriverWait wait, List<String> shoppingList) {
-
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".mb-3")));
-		List<WebElement> products = new ArrayList<>(driver.findElements(By.cssSelector(".mb-3")));
-
-		for (String item : shoppingList) {
-			WebElement product = products.stream()
-					.filter(s -> s.findElement(By.cssSelector("b")).getText().equals(item)).findFirst().orElse(null);
-
-			if (product != null) {
-				WebElement button = product.findElement(By.xpath("(.//button[@class='btn w-10 rounded'])"));
-				button.click();
-
-				wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#toast-container")));
-				wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector("#toast-container")));
-			} else {
-				System.out.println("Item not found: " + item);
-			}
-		}
-	}
-
-	private static void login(WebDriver driver, WebDriverWait wait) {
-		String email = "iwieczorek@iwie.com";
-		String password = "Testtest1!";
-		driver.findElement(By.id("userEmail")).sendKeys(email);
-		driver.findElement(By.id("userPassword")).sendKeys(password);
-		driver.findElement(By.id("login")).click();
-		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector("#toast-container")));
-
-	}
-
+    // Confirm the order
+    private static void confirmation(WebDriver driver) {
+        driver.findElement(By.xpath("//a[normalize-space()='Place Order']")).click();
+        String confirmMessage = driver.findElement(By.cssSelector(".hero-primary")).getText();
+        Assert.assertTrue(confirmMessage.equalsIgnoreCase("THANKYOU FOR THE ORDER."));
+    }
 }
