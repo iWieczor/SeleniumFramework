@@ -1,5 +1,9 @@
 package iWieczor.pageobjects;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -24,7 +28,7 @@ public class LandingPage extends AbstractComponent {
 	@FindBy(id = "login")
 	WebElement submit;
 	@FindBy(css = "#toast-container")
-	WebElement loginErrorMessage;
+	WebElement ToastMessage;
 
 	public ProductCatalogue loginApplication(String email, String password) {
 	    emailEle.sendKeys(email);
@@ -34,15 +38,30 @@ public class LandingPage extends AbstractComponent {
 	    return productCatalogue;
 	}
 	
-	public String getLoginErrorMessage() {
-		waitForWenElementToAppear(loginErrorMessage);
-		return loginErrorMessage.getText();
-			
+	public String getToastMessage() {
+		waitForWebElementToAppear(ToastMessage);
+		return ToastMessage.getText();
+	}
+	public void toastDisappear() {
+		waitForWebElementToDisappear(ToastMessage);
 	}
 
 	public void goTo() {
 		driver.get("https://rahulshettyacademy.com/client");
 
+	}
+	public List<String> invalidEmailText(){
+		submit.click();
+		String emptyEmailText = (driver.findElement(By.cssSelector("div[class='form-group'] div[class='invalid-feedback'] div"))).getText();
+		String emptyPasswordText = (driver.findElement(By.cssSelector("div[class='form-group mb-4'] div[class='invalid-feedback'] div"))).getText();
+		emailEle.sendKeys("invalid Email");
+	    submit.click();
+	    String invalidEmailText = (driver.findElement(By.cssSelector("div[class='form-group'] div[class='invalid-feedback'] div"))).getText();
+        List<String> loginErrorsMsgList = new ArrayList<>();
+        loginErrorsMsgList.add(emptyEmailText);
+        loginErrorsMsgList.add(emptyPasswordText);
+        loginErrorsMsgList.add(invalidEmailText);
+        return loginErrorsMsgList;
 	}
 
 }

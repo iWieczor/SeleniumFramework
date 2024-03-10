@@ -16,8 +16,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
-import iWieczor.pageobjects.LandingPage;
-
 public class StandAloneTest {
 
 	public static void main(String[] args) {
@@ -27,7 +25,7 @@ public class StandAloneTest {
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(2)); // set wait time to 5s
 		driver.get("https://rahulshettyacademy.com/client"); // Loading the homepage
 
-		LandingPage landingPage = new LandingPage(driver);
+
 		
 		List<String> shoppingList = Arrays.asList("ZARA COAT 3", "IPHONE 13 PRO");
 

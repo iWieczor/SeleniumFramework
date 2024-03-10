@@ -28,7 +28,7 @@ public class AbstractComponent {
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(findBy));
 	}
 
-	public void waitForWenElementToAppear(WebElement webElement) {
+	public void waitForWebElementToAppear(WebElement webElement) {
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
 		wait.until(ExpectedConditions.visibilityOf(webElement));
 	}
@@ -41,6 +41,10 @@ public class AbstractComponent {
 	public void goToCart(WebDriver driver) {
 		driver.findElement(By.xpath("//button[@routerlink='/dashboard/cart']")).click();
 	}
+	public void signOut(WebDriver driver) {
+		driver.findElement(By.xpath("//button[normalize-space()='Sign Out']")).click();
+	}
+	
 
 	public OrderPage goToOrders(WebDriver driver) {
 		driver.findElement(By.xpath("//button[@routerlink='/dashboard/myorders']")).click();
